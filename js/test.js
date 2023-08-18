@@ -1,3 +1,0 @@
-
-
-new SimpleLightbox('.gallery a');
