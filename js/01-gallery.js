@@ -3,8 +3,18 @@ import { galleryItems } from './gallery-items.js';
 
 const galleryRef = document.querySelector('.gallery');
 
+// створюю глобальну змінну для доступу до неї в колбеці onOpenImgEscClick
+let instance;
+
 galleryRef.innerHTML = createGalleryMarkup(galleryItems);
 galleryRef.addEventListener('click', onGalleryImgClick);
+
+function onOpenImgEscClick(e) {
+  if (e.code === 'Escape') {
+    instance.close();
+    galleryRef.removeEventListener('keydown', onOpenImgEscClick);
+  };
+};
 
 function createGalleryMarkup(arr) {
   return arr.map(item => 
@@ -30,12 +40,9 @@ function onGalleryImgClick(e) {
 
   const image = e.target.dataset.source;
 
-  const instance = basicLightbox.create(`<img src="${image}"></div>`);
+  instance = basicLightbox.create(`<img src="${image}"></div>`);
   instance.show();
 
-  galleryRef.addEventListener('keydown', (e) => {
-    if (e.code === 'Escape') {
-      instance.close();
-    }
-  });
+  // в onOpenImgEscClick після натискання на Escape знімається слухач події
+  galleryRef.addEventListener('keydown', onOpenImgEscClick);
 };
